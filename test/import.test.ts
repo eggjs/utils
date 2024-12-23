@@ -11,6 +11,10 @@ describe('test/import.test.ts', () => {
     it('should work on esm', () => {
       assert.equal(importResolve(getFilepath('esm')), getFilepath('esm/index.js'));
     });
+
+    it('should work on typescript', () => {
+      assert.equal(importResolve(getFilepath('tshy')), getFilepath('tshy/src/index.ts'));
+    });
   });
 
   describe('importModule()', () => {
@@ -102,6 +106,22 @@ describe('test/import.test.ts', () => {
       assert.deepEqual(Object.keys(obj), [ 'foo', 'one' ]);
       assert.equal(obj.foo, 'bar');
       assert.equal(obj.one, 1);
+    });
+
+    it('should work on tshy', async () => {
+      let obj = await importModule(getFilepath('tshy'));
+      assert.deepEqual(Object.keys(obj), [
+        'Application',
+        'Agent',
+        'one',
+        'startCluster',
+        'default',
+      ]);
+      assert.equal(obj.one, 1);
+      assert.deepEqual(obj.default, { foo: 'bar' });
+
+      obj = await importModule(getFilepath('tshy'), { importDefaultOnly: true });
+      assert.deepEqual(obj, { foo: 'bar' });
     });
 
     it('should work on ts-module', async () => {

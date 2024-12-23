@@ -5,7 +5,7 @@ import os from 'node:os';
 import { stat, mkdir, writeFile, realpath } from 'node:fs/promises';
 import { importModule } from './import.js';
 
-const debug = debuglog('@eggjs/utils:plugin');
+const debug = debuglog('@eggjs/utils/plugin');
 
 const tmpDir = os.tmpdir();
 
