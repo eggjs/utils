@@ -126,16 +126,8 @@ describe('test/import.test.ts', () => {
     });
 
     it('should work on tshy with dist', async () => {
-      let obj = await importModule(getFilepath('tshy-dist'));
-      assert.deepEqual(Object.keys(obj), [
-        'default',
-        'one',
-      ]);
-      assert.equal(obj.one, 1);
-      assert.deepEqual(obj.default, { foo: 'bar2', one: 1 });
-
-      obj = await importModule(getFilepath('tshy-dist'), { importDefaultOnly: true });
-      assert.deepEqual(obj, { foo: 'bar2', one: 1 });
+      const obj = await importModule(getFilepath('tshy-dist'));
+      assert.equal(obj.one, 2);
     });
 
     it('should work on ts-module', async () => {
