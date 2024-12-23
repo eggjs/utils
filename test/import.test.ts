@@ -12,8 +12,12 @@ describe('test/import.test.ts', () => {
       assert.equal(importResolve(getFilepath('esm')), getFilepath('esm/index.js'));
     });
 
-    it('should work on typescript', () => {
+    it('should work on typescript without dist', () => {
       assert.equal(importResolve(getFilepath('tshy')), getFilepath('tshy/src/index.ts'));
+    });
+
+    it('should work on typescript with dist', () => {
+      assert.equal(importResolve(getFilepath('tshy-dist')), getFilepath('tshy-dist/dist2/commonjs/index.js'));
     });
   });
 
@@ -108,20 +112,30 @@ describe('test/import.test.ts', () => {
       assert.equal(obj.one, 1);
     });
 
-    it('should work on tshy', async () => {
+    it('should work on tshy without dist', async () => {
       let obj = await importModule(getFilepath('tshy'));
       assert.deepEqual(Object.keys(obj), [
-        'Application',
-        'Agent',
-        'one',
-        'startCluster',
         'default',
+        'one',
       ]);
       assert.equal(obj.one, 1);
       assert.deepEqual(obj.default, { foo: 'bar' });
 
       obj = await importModule(getFilepath('tshy'), { importDefaultOnly: true });
       assert.deepEqual(obj, { foo: 'bar' });
+    });
+
+    it('should work on tshy with dist', async () => {
+      let obj = await importModule(getFilepath('tshy-dist'));
+      assert.deepEqual(Object.keys(obj), [
+        'default',
+        'one',
+      ]);
+      assert.equal(obj.one, 1);
+      assert.deepEqual(obj.default, { foo: 'bar2', one: 1 });
+
+      obj = await importModule(getFilepath('tshy-dist'), { importDefaultOnly: true });
+      assert.deepEqual(obj, { foo: 'bar2', one: 1 });
     });
 
     it('should work on ts-module', async () => {

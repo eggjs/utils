@@ -6,8 +6,6 @@ import fs from 'node:fs';
 
 const debug = debuglog('@eggjs/utils/import');
 
-let _customRequire: NodeRequire;
-
 export interface ImportResolveOptions {
   paths?: string[];
 }
@@ -17,6 +15,9 @@ export interface ImportModuleOptions extends ImportResolveOptions {
   importDefaultOnly?: boolean;
 }
 
+const isESM = typeof require === 'undefined';
+
+let _customRequire: NodeRequire;
 function getRequire() {
   if (!_customRequire) {
     if (typeof require !== 'undefined') {
@@ -28,36 +29,56 @@ function getRequire() {
   return _customRequire;
 }
 
-let supportTypeScript: boolean | undefined;
+let _supportTypeScript: boolean | undefined;
 function isSupportTypeScript() {
-  if (supportTypeScript === undefined) {
+  if (_supportTypeScript === undefined) {
     const extensions = getRequire().extensions;
-    supportTypeScript = extensions['.ts'] !== undefined;
-    debug('[isSupportTypeScript] %o, extensions: %j', supportTypeScript, Object.keys(extensions));
+    _supportTypeScript = extensions['.ts'] !== undefined;
+    debug('[isSupportTypeScript] %o, extensions: %j', _supportTypeScript, Object.keys(extensions));
   }
-  return supportTypeScript;
+  return _supportTypeScript;
+}
+
+function tryToGetTypeScriptMainFile(pkg: any, baseDir: string): string | undefined {
+  // try to read pkg.main or exports.module first
+  // "main": "./dist/commonjs/index.js",
+  // "types": "./dist/commonjs/index.d.ts",
+  // "module": "./dist/esm/index.js"
+  const defaultMainFile = isESM ? pkg.module ?? pkg.main : pkg.main;
+  if (defaultMainFile) {
+    const mainIndexFilePath = path.join(baseDir, defaultMainFile);
+    if (fs.existsSync(mainIndexFilePath)) {
+      debug('[tryToGetTypeScriptMainFile] %o, use pkg.main or pkg.module: %o, isESM: %s',
+        mainIndexFilePath, defaultMainFile, isESM);
+      return;
+    }
+  }
+
+  // "tshy": {
+  //   "exports": {
+  //     "./package.json": "./package.json",
+  //     ".": "./src/index.ts"
+  //   }
+  // }
+  const mainIndexFile = pkg.tshy?.exports?.['.'];
+  if (mainIndexFile) {
+    const mainIndexFilePath = path.join(baseDir, mainIndexFile);
+    if (fs.existsSync(mainIndexFilePath)) {
+      return mainIndexFilePath;
+    }
+  }
 }
 
 export function importResolve(filepath: string, options?: ImportResolveOptions) {
   // support typescript import on absolute path
   if (path.isAbsolute(filepath) && isSupportTypeScript()) {
-    // "tshy": {
-    //   "exports": {
-    //     "./package.json": "./package.json",
-    //     ".": "./src/index.ts"
-    //   }
-    // }
     const pkgFile = path.join(filepath, 'package.json');
     if (fs.existsSync(pkgFile)) {
       const pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf-8'));
-      const mainIndexFile = pkg.tshy?.exports?.['.'];
-      if (mainIndexFile) {
-        const mainIndexFilePath = path.join(filepath, mainIndexFile);
-        if (fs.existsSync(mainIndexFilePath)) {
-          debug('[importResolve] %o, options: %o => %o, use typescript', filepath, options, mainIndexFilePath);
-          return mainIndexFilePath;
-        }
-        debug('[importResolve] typescript file %o not exists', mainIndexFilePath);
+      const mainFile = tryToGetTypeScriptMainFile(pkg, filepath);
+      if (mainFile) {
+        debug('[importResolve] %o, use typescript main file: %o', filepath, mainFile);
+        return mainFile;
       }
     }
   }
