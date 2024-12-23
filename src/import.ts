@@ -1,8 +1,10 @@
 import { debuglog } from 'node:util';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
+import path from 'node:path';
+import fs from 'node:fs';
 
-const debug = debuglog('@eggjs/utils:import');
+const debug = debuglog('@eggjs/utils/import');
 
 let _customRequire: NodeRequire;
 
@@ -15,17 +17,53 @@ export interface ImportModuleOptions extends ImportResolveOptions {
   importDefaultOnly?: boolean;
 }
 
-export function importResolve(filepath: string, options?: ImportResolveOptions) {
-  const cwd = process.cwd();
+function getRequire() {
   if (!_customRequire) {
     if (typeof require !== 'undefined') {
       _customRequire = require;
     } else {
-      _customRequire = createRequire(cwd);
+      _customRequire = createRequire(process.cwd());
     }
   }
+  return _customRequire;
+}
+
+let supportTypeScript: boolean | undefined;
+function isSupportTypeScript() {
+  if (supportTypeScript === undefined) {
+    const extensions = getRequire().extensions;
+    supportTypeScript = extensions['.ts'] !== undefined;
+    debug('[isSupportTypeScript] %o, extensions: %j', supportTypeScript, Object.keys(extensions));
+  }
+  return supportTypeScript;
+}
+
+export function importResolve(filepath: string, options?: ImportResolveOptions) {
+  // support typescript import on absolute path
+  if (path.isAbsolute(filepath) && isSupportTypeScript()) {
+    // "tshy": {
+    //   "exports": {
+    //     "./package.json": "./package.json",
+    //     ".": "./src/index.ts"
+    //   }
+    // }
+    const pkgFile = path.join(filepath, 'package.json');
+    if (fs.existsSync(pkgFile)) {
+      const pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf-8'));
+      const mainIndexFile = pkg.tshy?.exports?.['.'];
+      if (mainIndexFile) {
+        const mainIndexFilePath = path.join(filepath, mainIndexFile);
+        if (fs.existsSync(mainIndexFilePath)) {
+          debug('[importResolve] %o, options: %o => %o, use typescript', filepath, options, mainIndexFilePath);
+          return mainIndexFilePath;
+        }
+        debug('[importResolve] typescript file %o not exists', mainIndexFilePath);
+      }
+    }
+  }
+  const cwd = process.cwd();
   const paths = options?.paths ?? [ cwd ];
-  const moduleFilePath = _customRequire.resolve(filepath, {
+  const moduleFilePath = getRequire().resolve(filepath, {
     paths,
   });
   debug('[importResolve] %o, options: %o => %o', filepath, options, moduleFilePath);
