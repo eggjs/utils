@@ -40,9 +40,8 @@ function isSupportTypeScript() {
 }
 
 function tryToGetTypeScriptMainFile(pkg: any, baseDir: string): string | undefined {
-  // try to read pkg.main or exports.module first
+  // try to read pkg.main or pkg.module first
   // "main": "./dist/commonjs/index.js",
-  // "types": "./dist/commonjs/index.d.ts",
   // "module": "./dist/esm/index.js"
   const defaultMainFile = isESM ? pkg.module ?? pkg.main : pkg.main;
   if (defaultMainFile) {
