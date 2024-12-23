@@ -53,6 +53,7 @@ function tryToGetTypeScriptMainFile(pkg: any, baseDir: string): string | undefin
     }
   }
 
+  // for the module under development
   // "tshy": {
   //   "exports": {
   //     "./package.json": "./package.json",
