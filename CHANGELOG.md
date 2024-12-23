@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/eggjs/utils/compare/v4.0.3...v4.1.0) (2024-12-23)
+
+
+### Features
+
+* support import typescript files first at dev env ([#26](https://github.com/eggjs/utils/issues/26)) ([349c0c3](https://github.com/eggjs/utils/commit/349c0c3886cae59d1dcaa6634764aee406c07837))
+
 ## [4.0.3](https://github.com/eggjs/egg-utils/compare/v4.0.2...v4.0.3) (2024-12-17)
 
 
