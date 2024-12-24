@@ -173,6 +173,8 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
     if (supportImportMetaResolve) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
+      console.error(filepath);
+      console.error(import.meta.resolve(filepath));
       moduleFilePath = fileURLToPath(import.meta.resolve(filepath));
     } else {
       moduleFilePath = getRequire().resolve(filepath);
