@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/eggjs/utils/compare/v4.1.0...v4.1.1) (2024-12-24)
+
+
+### Bug Fixes
+
+* try to read build dist file first ([#27](https://github.com/eggjs/utils/issues/27)) ([7a89153](https://github.com/eggjs/utils/commit/7a89153f70a0536674287022ac4db71a626361c4))
+
 ## [4.1.0](https://github.com/eggjs/utils/compare/v4.0.3...v4.1.0) (2024-12-23)
 
 
