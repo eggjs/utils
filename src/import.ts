@@ -16,6 +16,8 @@ export interface ImportModuleOptions extends ImportResolveOptions {
 }
 
 const isESM = typeof require === 'undefined';
+const nodeMajorVersion = parseInt(process.versions.node.split('.', 1)[0], 10);
+const supportImportMetaResolve = nodeMajorVersion >= 18;
 
 let _customRequire: NodeRequire;
 function getRequire() {
@@ -168,9 +170,13 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
   }
 
   if (isESM) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    moduleFilePath = fileURLToPath(import.meta.resolve(filepath));
+    if (supportImportMetaResolve) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      moduleFilePath = fileURLToPath(import.meta.resolve(filepath));
+    } else {
+      moduleFilePath = getRequire().resolve(filepath);
+    }
   } else {
     const cwd = process.cwd();
     const paths = options?.paths ?? [ cwd ];

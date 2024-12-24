@@ -145,7 +145,12 @@ describe('test/import.test.ts', () => {
       assert.deepEqual(obj, { foo: 'bar' });
 
       obj = await importModule(getFilepath('ts-module/exports'));
-      assert.deepEqual(Object.keys(obj), [ 'default' ]);
+      if (process.version.startsWith('v23.')) {
+        // support `module.exports` on Node.js >=23
+        assert.deepEqual(Object.keys(obj), [ 'default', 'module.exports' ]);
+      } else {
+        assert.deepEqual(Object.keys(obj), [ 'default' ]);
+      }
       assert.equal(obj.default.foo, 'bar');
       assert.equal(obj.default.one, 1);
 
