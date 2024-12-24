@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.2](https://github.com/eggjs/utils/compare/v4.1.1...v4.1.2) (2024-12-24)
+
+
+### Bug Fixes
+
+* should try to use esm module first ([#28](https://github.com/eggjs/utils/issues/28)) ([88b08cf](https://github.com/eggjs/utils/commit/88b08cff7da0a883fbda8d627acef538f61ba2ef))
+
 ## [4.1.1](https://github.com/eggjs/utils/compare/v4.1.0...v4.1.1) (2024-12-24)
 
 
