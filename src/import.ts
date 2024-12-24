@@ -171,13 +171,13 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
 
   if (isESM) {
     if (supportImportMetaResolve) {
-      console.error(filepath);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      console.error(import.meta.resolve(filepath));
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      moduleFilePath = fileURLToPath(import.meta.resolve(filepath));
+      moduleFilePath = import.meta.resolve(filepath);
+      if (moduleFilePath.startsWith('file://')) {
+        // resolve will return file:// URL on Linux and MacOS expect on Windows
+        moduleFilePath = fileURLToPath(moduleFilePath);
+      }
     } else {
       moduleFilePath = getRequire().resolve(filepath);
     }
