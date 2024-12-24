@@ -11,6 +11,10 @@ describe('test/import.test.ts', () => {
 
     it('should work on esm', () => {
       assert.equal(importResolve(getFilepath('esm')), getFilepath('esm/index.js'));
+      assert.equal(importResolve(getFilepath('esm/config/plugin')), getFilepath('esm/config/plugin.js'));
+      assert.throws(() => {
+        importResolve(getFilepath('esm/config/plugin.default'));
+      }, /Cannot find module/);
     });
 
     it('should work on ts-module', () => {

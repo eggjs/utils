@@ -188,7 +188,8 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
       paths,
     });
   }
-  debug('[importResolve] %o, options: %o => %o', filepath, options, moduleFilePath);
+  debug('[importResolve] %o, options: %o => %o, isESM: %s',
+    filepath, options, moduleFilePath, isESM);
   return moduleFilePath;
 }
 
@@ -198,9 +199,8 @@ export async function importModule(filepath: string, options?: ImportModuleOptio
   if (isESM) {
     // esm
     const fileUrl = pathToFileURL(moduleFilePath).toString();
-    debug('[importModule] await import start: %o', fileUrl);
     obj = await import(fileUrl);
-    debug('[importModule] await import end: %o => %o', filepath, obj);
+    debug('[importModule] await import %o', fileUrl);
     // {
     //   default: { foo: 'bar', one: 1 },
     //   foo: 'bar',
@@ -243,7 +243,7 @@ export async function importModule(filepath: string, options?: ImportModuleOptio
   } else {
     // commonjs
     obj = require(moduleFilePath);
-    debug('[importModule] require %o => %o', filepath, obj);
+    debug('[importModule] require %o', moduleFilePath);
     if (obj?.__esModule === true && 'default' in obj) {
       // 兼容 cjs 模拟 esm 的导出格式
       // {
@@ -253,6 +253,8 @@ export async function importModule(filepath: string, options?: ImportModuleOptio
       obj = obj.default;
     }
   }
-  debug('[importModule] return %o => %o', filepath, obj);
+  if (debug.enabled) {
+    debug('[importModule] return %o => keys: %j', filepath, Object.keys(obj));
+  }
   return obj;
 }
