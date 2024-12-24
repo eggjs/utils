@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { strict as assert } from 'node:assert';
 import fs from 'node:fs';
-import mm from 'mm';
+import * as mm from 'mm';
 import { getFrameworkPath } from '../src/index.js';
 import { getFilepath, testDir } from './helper.js';
 

@@ -38,7 +38,7 @@
     "egg-bin": "6",
     "eslint": "8",
     "eslint-config-egg": "14",
-    "mm": "3",
+    "mm": "4",
     "npminstall": "7",
     "rimraf": "6",
     "runscript": "2",

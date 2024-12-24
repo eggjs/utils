@@ -3,7 +3,7 @@ import { strict as assert } from 'node:assert';
 import { rm } from 'node:fs/promises';
 import fsPromise from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import mm from 'mm';
+import * as mm from 'mm';
 import coffee from 'coffee';
 import { runscript } from 'runscript';
 import utils from '../src/index.js';
