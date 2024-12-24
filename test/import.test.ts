@@ -6,10 +6,15 @@ describe('test/import.test.ts', () => {
   describe('importResolve()', () => {
     it('should work on cjs', () => {
       assert.equal(importResolve(getFilepath('cjs')), getFilepath('cjs/index.js'));
+      assert.equal(importResolve(getFilepath('cjs/exports')), getFilepath('cjs/exports.js'));
     });
 
     it('should work on esm', () => {
       assert.equal(importResolve(getFilepath('esm')), getFilepath('esm/index.js'));
+    });
+
+    it('should work on ts-module', () => {
+      assert.equal(importResolve(getFilepath('ts-module')), getFilepath('ts-module/index.ts'));
     });
 
     it('should work on typescript without dist', () => {
@@ -17,7 +22,7 @@ describe('test/import.test.ts', () => {
     });
 
     it('should work on typescript with dist', () => {
-      assert.equal(importResolve(getFilepath('tshy-dist')), getFilepath('tshy-dist/dist2/commonjs/index.js'));
+      assert.equal(importResolve(getFilepath('tshy-dist')), getFilepath('tshy-dist/dist2/esm/index.js'));
     });
   });
 
@@ -132,7 +137,7 @@ describe('test/import.test.ts', () => {
 
     it('should work on ts-module', async () => {
       let obj = await importModule(getFilepath('ts-module'));
-      assert.deepEqual(Object.keys(obj), [ 'default', 'one' ]);
+      assert.deepEqual(Object.keys(obj), [ 'one', 'default' ]);
       assert.equal(obj.one, 1);
       assert.deepEqual(obj.default, { foo: 'bar' });
 
@@ -140,16 +145,21 @@ describe('test/import.test.ts', () => {
       assert.deepEqual(obj, { foo: 'bar' });
 
       obj = await importModule(getFilepath('ts-module/exports'));
-      assert.deepEqual(Object.keys(obj), [ 'foo', 'one' ]);
-      assert.equal(obj.foo, 'bar');
-      assert.equal(obj.one, 1);
+      if (process.version.startsWith('v23.')) {
+        // support `module.exports` on Node.js >=23
+        assert.deepEqual(Object.keys(obj), [ 'default', 'module.exports' ]);
+      } else {
+        assert.deepEqual(Object.keys(obj), [ 'default' ]);
+      }
+      assert.equal(obj.default.foo, 'bar');
+      assert.equal(obj.default.one, 1);
 
       obj = await importModule(getFilepath('ts-module/exports'), { importDefaultOnly: true });
       assert.deepEqual(Object.keys(obj), [ 'foo', 'one' ]);
       assert.equal(obj.foo, 'bar');
       assert.equal(obj.one, 1);
 
-      obj = await importModule(getFilepath('ts-module/exports.ts'));
+      obj = await importModule(getFilepath('ts-module/exports.ts'), { importDefaultOnly: true });
       assert.deepEqual(Object.keys(obj), [ 'foo', 'one' ]);
       assert.equal(obj.foo, 'bar');
       assert.equal(obj.one, 1);

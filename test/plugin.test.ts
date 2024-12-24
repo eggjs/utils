@@ -3,7 +3,6 @@ import { strict as assert } from 'node:assert';
 import { rm } from 'node:fs/promises';
 import fsPromise from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import mm from 'mm';
 import coffee from 'coffee';
 import { runscript } from 'runscript';
 import utils from '../src/index.js';
@@ -24,12 +23,15 @@ describe('test/plugin.test.ts', () => {
     assert(existsSync(tmp), `${tmp} not exists`);
   });
   afterEach(() => rm(tmp, { force: true, recursive: true }));
-  afterEach(mm.restore);
 
   describe('getPlugins()', () => {
     const bin = path.join(cwd, 'get_plugin.js');
     it('should get plugins using npm', async () => {
-      await runscript('npm -v && npm install', { cwd: tmp });
+      let cmd = 'npm -v && npm install';
+      if (!process.env.CI) {
+        cmd += ' --registry=https://registry.npmmirror.com';
+      }
+      await runscript(cmd, { cwd: tmp });
 
       const args = JSON.stringify({
         baseDir: tmp,
@@ -43,7 +45,8 @@ describe('test/plugin.test.ts', () => {
     });
 
     it('should get plugins using npminstall', async () => {
-      await runscript('npminstall', { cwd: tmp });
+      const cmd = process.env.CI ? 'npminstall' : 'npminstall -c';
+      await runscript(cmd, { cwd: tmp });
 
       const args = JSON.stringify({
         baseDir: tmp,
@@ -57,7 +60,8 @@ describe('test/plugin.test.ts', () => {
     });
 
     it('should get plugins using npminstall on test', async () => {
-      await runscript('npminstall', { cwd: tmp });
+      const cmd = process.env.CI ? 'npminstall' : 'npminstall -c';
+      await runscript(cmd, { cwd: tmp });
 
       const args = JSON.stringify({
         baseDir: tmp,
@@ -82,7 +86,11 @@ describe('test/plugin.test.ts', () => {
   describe('getLoadUnits()', () => {
     const bin = path.join(cwd, 'get_loadunit.js');
     it('should get plugins using npm', async () => {
-      await runscript('npm -v && npm install', { cwd: tmp });
+      let cmd = 'npm -v && npm install';
+      if (!process.env.CI) {
+        cmd += ' --registry=https://registry.npmmirror.com';
+      }
+      await runscript(cmd, { cwd: tmp });
 
       const args = JSON.stringify({
         baseDir: tmp,
@@ -98,7 +106,8 @@ describe('test/plugin.test.ts', () => {
     });
 
     it('should get plugins using npminstall', async () => {
-      await runscript('npminstall', { cwd: tmp });
+      const cmd = process.env.CI ? 'npminstall' : 'npminstall -c';
+      await runscript(cmd, { cwd: tmp });
 
       const args = JSON.stringify({
         baseDir: tmp,
@@ -121,7 +130,8 @@ describe('test/plugin.test.ts', () => {
     });
 
     it('should get plugins when baseDir is not exist', async () => {
-      await runscript('npminstall', { cwd: tmp });
+      const cmd = process.env.CI ? 'npminstall' : 'npminstall -c';
+      await runscript(cmd, { cwd: tmp });
 
       const args = JSON.stringify({
         framework: path.join(tmp, 'node_modules/egg'),
@@ -158,7 +168,11 @@ describe('test/plugin.test.ts', () => {
   describe('getConfig()', () => {
     const bin = path.join(tmp, 'get_config.js');
     it('should get configs using npm', async () => {
-      await runscript('npm -v && npm install', { cwd: tmp });
+      let cmd = 'npm -v && npm install';
+      if (!process.env.CI) {
+        cmd += ' --registry=https://registry.npmmirror.com';
+      }
+      await runscript(cmd, { cwd: tmp });
 
       const args = JSON.stringify({
         baseDir: tmp,
@@ -172,7 +186,8 @@ describe('test/plugin.test.ts', () => {
     });
 
     it('should get configs using npminstall on framework = egg', async () => {
-      await runscript('npminstall', { cwd: tmp });
+      const cmd = process.env.CI ? 'npminstall' : 'npminstall -c';
+      await runscript(cmd, { cwd: tmp });
 
       const args = JSON.stringify({
         baseDir: tmp,
@@ -186,7 +201,8 @@ describe('test/plugin.test.ts', () => {
     });
 
     it('should get configs using npminstall on framework = custom egg', async () => {
-      await runscript('npminstall', { cwd: tmp });
+      const cmd = process.env.CI ? 'npminstall' : 'npminstall -c';
+      await runscript(cmd, { cwd: tmp });
 
       const args = JSON.stringify({
         baseDir: tmp,

@@ -10,12 +10,13 @@
   "description": "Utils for all egg projects",
   "scripts": {
     "lint": "eslint src test --ext ts",
-    "pretest": "npm run prepublishOnly",
-    "test": "npm run lint -- --fix && npm run test-local",
+    "pretest": "npm run clean && npm run lint -- --fix && npm run prepublishOnly",
+    "test": "npm run test-local",
     "test-local": "egg-bin test",
-    "preci": "npm run prepublishOnly",
-    "ci": "npm run lint && egg-bin cov && npm run prepublishOnly",
-    "prepublishOnly": "tshy && tshy-after"
+    "preci": "npm run clean && npm run lint && npm run prepublishOnly",
+    "ci": "egg-bin cov",
+    "clean": "rimraf dist",
+    "prepublishOnly": "tshy && tshy-after && attw --pack"
   },
   "keywords": [
     "egg",
@@ -29,6 +30,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.17.2",
     "@eggjs/tsconfig": "1",
     "@types/mocha": "10",
     "@types/node": "22",
@@ -38,6 +40,7 @@
     "eslint-config-egg": "14",
     "mm": "3",
     "npminstall": "7",
+    "rimraf": "6",
     "runscript": "2",
     "tshy": "3",
     "tshy-after": "1",
