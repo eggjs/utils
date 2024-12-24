@@ -254,7 +254,7 @@ export async function importModule(filepath: string, options?: ImportModuleOptio
     }
   }
   if (debug.enabled) {
-    debug('[importModule] return %o => keys: %j', filepath, Object.keys(obj));
+    debug('[importModule] return %o => keys: %j', filepath, obj ? Object.keys(obj) : obj);
   }
   return obj;
 }
