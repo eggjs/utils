@@ -179,7 +179,7 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
         moduleFilePath = fileURLToPath(moduleFilePath);
       }
       if (!fs.existsSync(moduleFilePath)) {
-        throw new TypeError(`Cannot resolve module ${filepath} to ${moduleFilePath}, because ${moduleFilePath} does not exists`);
+        throw new TypeError(`Cannot find module ${filepath}, because ${moduleFilePath} does not exists`);
       }
     } else {
       moduleFilePath = getRequire().resolve(filepath);
