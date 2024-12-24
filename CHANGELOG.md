@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.3](https://github.com/eggjs/utils/compare/v4.1.2...v4.1.3) (2024-12-24)
+
+
+### Bug Fixes
+
+* debug dont print full import object ([#29](https://github.com/eggjs/utils/issues/29)) ([daa5edf](https://github.com/eggjs/utils/commit/daa5edf248331e9fdfe309d3bb2bba150fdf3f3b))
+
 ## [4.1.2](https://github.com/eggjs/utils/compare/v4.1.1...v4.1.2) (2024-12-24)
 
 
