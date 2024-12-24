@@ -3,7 +3,6 @@ import { strict as assert } from 'node:assert';
 import { rm } from 'node:fs/promises';
 import fsPromise from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import * as mm from 'mm';
 import coffee from 'coffee';
 import { runscript } from 'runscript';
 import utils from '../src/index.js';
@@ -24,7 +23,6 @@ describe('test/plugin.test.ts', () => {
     assert(existsSync(tmp), `${tmp} not exists`);
   });
   afterEach(() => rm(tmp, { force: true, recursive: true }));
-  afterEach(mm.restore);
 
   describe('getPlugins()', () => {
     const bin = path.join(cwd, 'get_plugin.js');

@@ -1,12 +1,12 @@
 import path from 'node:path';
 import { strict as assert } from 'node:assert';
 import fs from 'node:fs';
-import * as mm from 'mm';
+import { mm, restore } from 'mm';
 import { getFrameworkPath } from '../src/index.js';
 import { getFilepath, testDir } from './helper.js';
 
 describe('test/framework.test.ts', () => {
-  afterEach(mm.restore);
+  afterEach(restore);
 
   it('should exist when specify baseDir', () => {
     it('should get egg by default but not exist', () => {
