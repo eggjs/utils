@@ -168,6 +168,8 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
   }
 
   if (isESM) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     moduleFilePath = fileURLToPath(import.meta.resolve(filepath));
   } else {
     const cwd = process.cwd();
