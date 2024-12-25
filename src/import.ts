@@ -151,8 +151,10 @@ function tryToResolveByDirname(dirname: string): string | undefined {
 
 export function importResolve(filepath: string, options?: ImportResolveOptions) {
   let moduleFilePath: string | undefined;
-  if (path.isAbsolute(filepath)) {
+  const isAbsolute = path.isAbsolute(filepath);
+  if (isAbsolute) {
     const stat = fs.statSync(filepath, { throwIfNoEntry: false });
+    // try to resolve from directory
     if (stat?.isDirectory()) {
       moduleFilePath = tryToResolveByDirname(filepath);
       if (moduleFilePath) {
@@ -160,16 +162,24 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
         return moduleFilePath;
       }
     }
-    if (!stat) {
-      moduleFilePath = tryToResolveFromFile(filepath);
-      if (moduleFilePath) {
-        debug('[importResolve] %o => %o', filepath, moduleFilePath);
-        return moduleFilePath;
-      }
+    // try to resolve from file
+    moduleFilePath = tryToResolveFromFile(filepath);
+    if (moduleFilePath) {
+      debug('[importResolve] %o => %o', filepath, moduleFilePath);
+      return moduleFilePath;
     }
   }
 
-  if (isESM) {
+  const extname = path.extname(filepath);
+  if ((!isAbsolute && extname === '.json') || !isESM) {
+    // find *.json or CommonJS module by require.resolve
+    // e.g.: importResolve('egg/package.json', { paths })
+    const cwd = process.cwd();
+    const paths = options?.paths ?? [ cwd ];
+    moduleFilePath = getRequire().resolve(filepath, {
+      paths,
+    });
+  } else {
     if (supportImportMetaResolve) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -184,12 +194,6 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
     } else {
       moduleFilePath = getRequire().resolve(filepath);
     }
-  } else {
-    const cwd = process.cwd();
-    const paths = options?.paths ?? [ cwd ];
-    moduleFilePath = require.resolve(filepath, {
-      paths,
-    });
   }
   debug('[importResolve] %o, options: %o => %o, isESM: %s',
     filepath, options, moduleFilePath, isESM);
