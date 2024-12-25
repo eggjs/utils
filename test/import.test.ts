@@ -28,6 +28,16 @@ describe('test/import.test.ts', () => {
     it('should work on typescript with dist', () => {
       assert.equal(importResolve(getFilepath('tshy-dist')), getFilepath('tshy-dist/dist2/esm/index.js'));
     });
+
+    it('should work on {name}/package.json', () => {
+      assert.equal(importResolve('egg/package.json', {
+        paths: [ getFilepath('framework-egg-default') ],
+      }), getFilepath('framework-egg-default/node_modules/egg/package.json'));
+    });
+
+    it('should work on /path/app => /path/app.js', () => {
+      assert.equal(importResolve(getFilepath('framework-egg-default/app')), getFilepath('framework-egg-default/app.js'));
+    });
   });
 
   describe('importModule()', () => {
