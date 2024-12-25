@@ -35,7 +35,7 @@
     "@types/mocha": "10",
     "@types/node": "22",
     "coffee": "5",
-    "@eggjs/bin": "beta",
+    "egg-bin": "^6.13.0",
     "eslint": "8",
     "eslint-config-egg": "14",
     "mm": "4",
