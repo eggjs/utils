@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.4](https://github.com/eggjs/utils/compare/v4.1.3...v4.1.4) (2024-12-25)
+
+
+### Bug Fixes
+
+* try resolve by file no matter dir exists or not ([#30](https://github.com/eggjs/utils/issues/30)) ([4605e3a](https://github.com/eggjs/utils/commit/4605e3a1805ffc7ac87d0a6fb1264f83f05e6539))
+
 ## [4.1.3](https://github.com/eggjs/utils/compare/v4.1.2...v4.1.3) (2024-12-24)
 
 
