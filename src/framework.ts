@@ -1,7 +1,11 @@
+import { debuglog } from 'node:util';
 import path from 'node:path';
 import assert from 'node:assert';
 import { existsSync } from 'node:fs';
 import { readJSONSync } from './utils.js';
+import { importResolve } from './import.js';
+
+const debug = debuglog('@eggjs/utils/framework');
 
 const initCwd = process.cwd();
 
@@ -66,18 +70,19 @@ function assertAndReturn(frameworkName: string, moduleDir: string) {
     // if frameworkName is scoped package, like @ali/egg
     if (frameworkName.startsWith('@') && frameworkName.includes('/')) {
       globalModuleDir = path.join(
-        require.resolve(`${frameworkName}/package.json`),
+        importResolve(`${frameworkName}/package.json`),
         '../../..',
       );
     } else {
       globalModuleDir = path.join(
-        require.resolve(`${frameworkName}/package.json`),
+        importResolve(`${frameworkName}/package.json`),
         '../..',
       );
     }
     moduleDirs.add(globalModuleDir);
   } catch (err) {
     // ignore
+    debug('importResolve %s on %s error: %s', frameworkName, moduleDir, err);
   }
   for (const moduleDir of moduleDirs) {
     const frameworkPath = path.join(moduleDir, frameworkName);

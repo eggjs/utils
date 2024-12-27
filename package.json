@@ -31,11 +31,11 @@
   "dependencies": {},
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.17.2",
+    "@eggjs/bin": "^7.0.0",
     "@eggjs/tsconfig": "1",
     "@types/mocha": "10",
     "@types/node": "22",
     "coffee": "5",
-    "egg-bin": "^6.13.0",
     "eslint": "8",
     "eslint-config-egg": "14",
     "mm": "4",
