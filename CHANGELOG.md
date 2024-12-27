@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.5](https://github.com/eggjs/utils/compare/v4.1.4...v4.1.5) (2024-12-27)
+
+
+### Bug Fixes
+
+* use importResolve to get framework path ([#31](https://github.com/eggjs/utils/issues/31)) ([7caad4d](https://github.com/eggjs/utils/commit/7caad4dfb19fba1f1f3d18892b1e44d696699fb6))
+
 ## [4.1.4](https://github.com/eggjs/utils/compare/v4.1.3...v4.1.4) (2024-12-25)
 
 
