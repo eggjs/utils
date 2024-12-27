@@ -1,4 +1,5 @@
 import { strict as assert } from 'node:assert';
+import coffee from 'coffee';
 import { importResolve, importModule } from '../src/index.js';
 import { getFilepath } from './helper.js';
 
@@ -7,10 +8,19 @@ describe('test/import.test.ts', () => {
     it('should work on cjs', () => {
       assert.equal(importResolve(getFilepath('cjs')), getFilepath('cjs/index.js'));
       assert.equal(importResolve(getFilepath('cjs/exports')), getFilepath('cjs/exports.js'));
+      assert.equal(importResolve(getFilepath('cjs-index')), getFilepath('cjs-index/index.cjs'));
+    });
+
+    it('should work on commonjs and require exists', () => {
+      return coffee.fork(getFilepath('cjs/run.js'))
+        // .debug()
+        .expect('stdout', /index\.js/)
+        .end();
     });
 
     it('should work on esm', () => {
       assert.equal(importResolve(getFilepath('esm')), getFilepath('esm/index.js'));
+      assert.equal(importResolve(getFilepath('esm-index')), getFilepath('esm-index/index.mjs'));
       assert.equal(importResolve(getFilepath('esm/config/plugin')), getFilepath('esm/config/plugin.js'));
       assert.throws(() => {
         importResolve(getFilepath('esm/config/plugin.default'));

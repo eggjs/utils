@@ -188,7 +188,9 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
         // resolve will return file:// URL on Linux and MacOS expect on Windows
         moduleFilePath = fileURLToPath(moduleFilePath);
       }
-      if (!fs.existsSync(moduleFilePath)) {
+      debug('[importResolve] import.meta.resolve %o => %o', filepath, moduleFilePath);
+      const stat = fs.statSync(moduleFilePath, { throwIfNoEntry: false });
+      if (!stat?.isFile()) {
         throw new TypeError(`Cannot find module ${filepath}, because ${moduleFilePath} does not exists`);
       }
     } else {
