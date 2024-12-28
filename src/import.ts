@@ -142,11 +142,12 @@ function tryToResolveByDirnameFromPackage(dirname: string, pkg: any): string | u
 }
 
 function tryToResolveByDirname(dirname: string): string | undefined {
+  let pkg: any = {};
   const pkgFile = path.join(dirname, 'package.json');
   if (fs.existsSync(pkgFile)) {
-    const pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf-8'));
-    return tryToResolveByDirnameFromPackage(dirname, pkg);
+    pkg = JSON.parse(fs.readFileSync(pkgFile, 'utf-8'));
   }
+  return tryToResolveByDirnameFromPackage(dirname, pkg);
 }
 
 export function importResolve(filepath: string, options?: ImportResolveOptions) {

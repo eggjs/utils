@@ -9,6 +9,7 @@ describe('test/import.test.ts', () => {
       assert.equal(importResolve(getFilepath('cjs')), getFilepath('cjs/index.js'));
       assert.equal(importResolve(getFilepath('cjs/exports')), getFilepath('cjs/exports.js'));
       assert.equal(importResolve(getFilepath('cjs-index')), getFilepath('cjs-index/index.cjs'));
+      assert.equal(importResolve(getFilepath('cjs/extend')), getFilepath('cjs/extend/index.js'));
     });
 
     it('should work on commonjs and require exists', () => {
@@ -29,6 +30,7 @@ describe('test/import.test.ts', () => {
 
     it('should work on ts-module', () => {
       assert.equal(importResolve(getFilepath('ts-module')), getFilepath('ts-module/index.ts'));
+      assert.equal(importResolve(getFilepath('ts-module/extend')), getFilepath('ts-module/extend/index.ts'));
     });
 
     it('should work on typescript without dist', () => {
@@ -51,6 +53,16 @@ describe('test/import.test.ts', () => {
   });
 
   describe('importModule()', () => {
+    it('should import extend/index.js from extend on cjs', async () => {
+      const obj = await importModule(getFilepath('cjs/extend'));
+      assert.equal(obj.extend, true);
+    });
+
+    it('should import extend/index.js from extend on ts', async () => {
+      const obj = await importModule(getFilepath('ts-module/extend'), { importDefaultOnly: true });
+      assert.equal(obj.extend, true);
+    });
+
     it('should work on cjs', async () => {
       let obj = await importModule(getFilepath('cjs'));
       if (process.version.startsWith('v23.')) {
