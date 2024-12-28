@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.6](https://github.com/eggjs/utils/compare/v4.1.5...v4.1.6) (2024-12-28)
+
+
+### Bug Fixes
+
+* try to use index.* when package.json not exists ([#32](https://github.com/eggjs/utils/issues/32)) ([b4b2e0c](https://github.com/eggjs/utils/commit/b4b2e0c47abf8367680753d5243cb7df41259e66))
+
 ## [4.1.5](https://github.com/eggjs/utils/compare/v4.1.4...v4.1.5) (2024-12-27)
 
 
