@@ -1,3 +1,5 @@
+import path from 'node:path';
+import fs from 'node:fs/promises';
 import { getFrameworkPath } from './framework.js';
 import { getPlugins, getConfig, getLoadUnits } from './plugin.js';
 import { getFrameworkOrEggPath } from './deprecated.js';
@@ -14,3 +16,42 @@ export default {
   getPlugins, getConfig, getLoadUnits,
   getFrameworkOrEggPath,
 };
+
+export enum EggType {
+  framework = 'framework',
+  plugin = 'plugin',
+  application = 'application',
+  unknown = 'unknown',
+}
+
+/**
+ * Detect the type of egg project
+ */
+export async function detectType(baseDir: string): Promise<EggType> {
+  const pkgFile = path.join(baseDir, 'package.json');
+  let pkg: {
+    egg?: {
+      framework?: boolean;
+    };
+    eggPlugin?: {
+      name: string;
+    };
+  };
+  try {
+    await fs.access(pkgFile);
+  } catch {
+    return EggType.unknown;
+  }
+  try {
+    pkg = JSON.parse(await fs.readFile(pkgFile, 'utf-8'));
+  } catch {
+    return EggType.unknown;
+  }
+  if (pkg.egg?.framework) {
+    return EggType.framework;
+  }
+  if (pkg.eggPlugin?.name) {
+    return EggType.plugin;
+  }
+  return EggType.application;
+}
