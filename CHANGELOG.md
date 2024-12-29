@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/eggjs/utils/compare/v4.1.6...v4.2.0) (2024-12-29)
+
+
+### Features
+
+* detect the type of egg project ([#33](https://github.com/eggjs/utils/issues/33)) ([68950de](https://github.com/eggjs/utils/commit/68950deec7e0f97be7cf8509a025ef218799e6cf))
+
 ## [4.1.6](https://github.com/eggjs/utils/compare/v4.1.5...v4.1.6) (2024-12-28)
 
 
