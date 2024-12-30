@@ -27,6 +27,12 @@ describe('test/import.test.ts', () => {
       }), getFilepath('cjs/index.js'));
     });
 
+    it('should inject commonjs package from {paths}/node_modules', () => {
+      assert.equal(importResolve('inject', {
+        paths: [ getFilepath('cjs') ],
+      }), getFilepath('cjs/node_modules/inject/index.js'));
+    });
+
     it('should work on commonjs and require exists', () => {
       return coffee.fork(getFilepath('cjs/run.js'))
         // .debug()
@@ -47,6 +53,12 @@ describe('test/import.test.ts', () => {
       assert.throws(() => {
         importResolve(getFilepath('esm/config/plugin.default'));
       }, /Cannot find module/);
+    });
+
+    it('should inject esm package from {paths}/node_modules', () => {
+      assert.equal(importResolve('inject', {
+        paths: [ getFilepath('esm') ],
+      }), getFilepath('esm/node_modules/inject/index.js'));
     });
 
     it('should work on ts-module', () => {

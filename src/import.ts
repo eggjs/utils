@@ -202,6 +202,17 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
     }
   }
 
+  // find from node_modules
+  for (const p of paths) {
+    const resolvedPath = path.join(p, 'node_modules', filepath);
+    moduleFilePath = tryToResolveFromAbsoluteFile(resolvedPath);
+    if (moduleFilePath) {
+      debug('[importResolve:node_modules] %o => %o => %o',
+        filepath, resolvedPath, moduleFilePath);
+      return moduleFilePath;
+    }
+  }
+
   const extname = path.extname(filepath);
   if ((!isAbsolute && extname === '.json') || !isESM) {
     moduleFilePath = getRequire().resolve(filepath, {
