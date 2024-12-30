@@ -150,33 +150,60 @@ function tryToResolveByDirname(dirname: string): string | undefined {
   return tryToResolveByDirnameFromPackage(dirname, pkg);
 }
 
+function isRelativePath(filepath: string): boolean {
+  return filepath.startsWith('./')
+    || filepath.startsWith('../')
+    || filepath.startsWith('.\\')
+    || filepath.startsWith('..\\');
+}
+
+function tryToResolveFromAbsoluteFile(filepath: string): string | undefined {
+  let moduleFilePath: string | undefined;
+  const stat = fs.statSync(filepath, { throwIfNoEntry: false });
+  // try to resolve from directory
+  if (stat?.isDirectory()) {
+    moduleFilePath = tryToResolveByDirname(filepath);
+    if (moduleFilePath) {
+      return moduleFilePath;
+    }
+  } else if (stat?.isFile()) {
+    return filepath;
+  }
+  // try to resolve from file
+  moduleFilePath = tryToResolveFromFile(filepath);
+  if (moduleFilePath) {
+    return moduleFilePath;
+  }
+}
+
 export function importResolve(filepath: string, options?: ImportResolveOptions) {
+  // find *.json or CommonJS module by require.resolve
+  // e.g.: importResolve('egg/package.json', { paths })
+  const cwd = process.cwd();
+  const paths = options?.paths ?? [ cwd ];
+
   let moduleFilePath: string | undefined;
   const isAbsolute = path.isAbsolute(filepath);
   if (isAbsolute) {
-    const stat = fs.statSync(filepath, { throwIfNoEntry: false });
-    // try to resolve from directory
-    if (stat?.isDirectory()) {
-      moduleFilePath = tryToResolveByDirname(filepath);
+    moduleFilePath = tryToResolveFromAbsoluteFile(filepath);
+    if (moduleFilePath) {
+      debug('[importResolve:isAbsolute] %o => %o', filepath, moduleFilePath);
+      return moduleFilePath;
+    }
+  } else if (isRelativePath(filepath)) {
+    for (const p of paths) {
+      const resolvedPath = path.resolve(p, filepath);
+      moduleFilePath = tryToResolveFromAbsoluteFile(resolvedPath);
       if (moduleFilePath) {
-        debug('[importResolve] %o => %o', filepath, moduleFilePath);
+        debug('[importResolve:isRelativePath] %o => %o => %o',
+          filepath, resolvedPath, moduleFilePath);
         return moduleFilePath;
       }
-    }
-    // try to resolve from file
-    moduleFilePath = tryToResolveFromFile(filepath);
-    if (moduleFilePath) {
-      debug('[importResolve] %o => %o', filepath, moduleFilePath);
-      return moduleFilePath;
     }
   }
 
   const extname = path.extname(filepath);
   if ((!isAbsolute && extname === '.json') || !isESM) {
-    // find *.json or CommonJS module by require.resolve
-    // e.g.: importResolve('egg/package.json', { paths })
-    const cwd = process.cwd();
-    const paths = options?.paths ?? [ cwd ];
     moduleFilePath = getRequire().resolve(filepath, {
       paths,
     });

@@ -7,9 +7,24 @@ describe('test/import.test.ts', () => {
   describe('importResolve()', () => {
     it('should work on cjs', () => {
       assert.equal(importResolve(getFilepath('cjs')), getFilepath('cjs/index.js'));
+      assert.equal(importResolve('./index.js', {
+        paths: [ getFilepath('cjs') ],
+      }), getFilepath('cjs/index.js'));
       assert.equal(importResolve(getFilepath('cjs/exports')), getFilepath('cjs/exports.js'));
+      assert.equal(importResolve('./exports', {
+        paths: [ getFilepath('cjs') ],
+      }), getFilepath('cjs/exports.js'));
       assert.equal(importResolve(getFilepath('cjs-index')), getFilepath('cjs-index/index.cjs'));
       assert.equal(importResolve(getFilepath('cjs/extend')), getFilepath('cjs/extend/index.js'));
+      assert.equal(importResolve('./extend', {
+        paths: [ getFilepath('cjs') ],
+      }), getFilepath('cjs/extend/index.js'));
+      assert.equal(importResolve('../index', {
+        paths: [ getFilepath('cjs/extend') ],
+      }), getFilepath('cjs/index.js'));
+      assert.equal(importResolve('../../index', {
+        paths: [ getFilepath('cjs/extend/foo') ],
+      }), getFilepath('cjs/index.js'));
     });
 
     it('should work on commonjs and require exists', () => {
@@ -21,8 +36,14 @@ describe('test/import.test.ts', () => {
 
     it('should work on esm', () => {
       assert.equal(importResolve(getFilepath('esm')), getFilepath('esm/index.js'));
+      assert.equal(importResolve('./index.js', {
+        paths: [ getFilepath('esm') ],
+      }), getFilepath('esm/index.js'));
       assert.equal(importResolve(getFilepath('esm-index')), getFilepath('esm-index/index.mjs'));
       assert.equal(importResolve(getFilepath('esm/config/plugin')), getFilepath('esm/config/plugin.js'));
+      assert.equal(importResolve('./config/plugin', {
+        paths: [ getFilepath('esm') ],
+      }), getFilepath('esm/config/plugin.js'));
       assert.throws(() => {
         importResolve(getFilepath('esm/config/plugin.default'));
       }, /Cannot find module/);
@@ -125,6 +146,13 @@ describe('test/import.test.ts', () => {
 
     it('should work on esm', async () => {
       let obj = await importModule(getFilepath('esm'));
+      assert.deepEqual(Object.keys(obj), [ 'default', 'one' ]);
+      assert.equal(obj.one, 1);
+      assert.deepEqual(obj.default, { foo: 'bar' });
+
+      obj = await importModule('./index.js', {
+        paths: [ getFilepath('esm') ],
+      });
       assert.deepEqual(Object.keys(obj), [ 'default', 'one' ]);
       assert.equal(obj.one, 1);
       assert.deepEqual(obj.default, { foo: 'bar' });
