@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.2](https://github.com/eggjs/utils/compare/v4.2.1...v4.2.2) (2024-12-30)
+
+
+### Bug Fixes
+
+* import resolve find in paths's node_modules ([#35](https://github.com/eggjs/utils/issues/35)) ([bd772af](https://github.com/eggjs/utils/commit/bd772afbf585283a8ecef1ea6cfcba668a98c511))
+
 ## [4.2.1](https://github.com/eggjs/utils/compare/v4.2.0...v4.2.1) (2024-12-30)
 
 
