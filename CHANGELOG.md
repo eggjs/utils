@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.1](https://github.com/eggjs/utils/compare/v4.2.0...v4.2.1) (2024-12-30)
+
+
+### Bug Fixes
+
+* import resolve support relative path ([#34](https://github.com/eggjs/utils/issues/34)) ([42afd2a](https://github.com/eggjs/utils/commit/42afd2a37367515c0f6ade4bf8cef6132632f755))
+
 ## [4.2.0](https://github.com/eggjs/utils/compare/v4.1.6...v4.2.0) (2024-12-29)
 
 
