@@ -31,6 +31,10 @@ describe('test/import.test.ts', () => {
       assert.equal(importResolve('inject', {
         paths: [ getFilepath('cjs') ],
       }), getFilepath('cjs/node_modules/inject/index.js'));
+
+      assert.equal(importResolve('tsconfig-paths-demo/register', {
+        paths: [ getFilepath('cjs') ],
+      }), getFilepath('cjs/node_modules/tsconfig-paths-demo/register.js'));
     });
 
     it('should work on commonjs and require exists', () => {
