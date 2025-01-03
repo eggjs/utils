@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import coffee from 'coffee';
-import { importResolve, importModule } from '../src/index.js';
+import { importResolve, importModule, ImportResolveError } from '../src/index.js';
 import { getFilepath } from './helper.js';
 
 describe('test/import.test.ts', () => {
@@ -35,6 +35,31 @@ describe('test/import.test.ts', () => {
       assert.equal(importResolve('tsconfig-paths-demo/register', {
         paths: [ getFilepath('cjs') ],
       }), getFilepath('cjs/node_modules/tsconfig-paths-demo/register.js'));
+    });
+
+    it('should find from {paths} parent node_modules', () => {
+      assert.equal(importResolve('tsconfig-paths-demo/register', {
+        paths: [ getFilepath('cjs/node_modules/inject') ],
+      }), getFilepath('cjs/node_modules/tsconfig-paths-demo/register.js'));
+
+      assert.equal(importResolve('tsconfig-paths-demo/register', {
+        paths: [ getFilepath('cjs/node_modules/@foo/bar') ],
+      }), getFilepath('cjs/node_modules/tsconfig-paths-demo/register.js'));
+    });
+
+    it('should throw error when resolve path not exists', () => {
+      assert.throws(() => {
+        importResolve('tsconfig-paths-demo-not-exists/register', {
+          paths: [ getFilepath('cjs/node_modules/inject') ],
+        });
+      }, err => {
+        assert(err instanceof ImportResolveError);
+        assert.equal(err.name, 'ImportResolveError');
+        assert.equal(err.filepath, 'tsconfig-paths-demo-not-exists/register');
+        assert.deepEqual(err.paths, [ getFilepath('cjs/node_modules/inject') ]);
+        assert.match(err.message, /Cannot find package/);
+        return true;
+      });
     });
 
     it('should work on commonjs and require exists', () => {

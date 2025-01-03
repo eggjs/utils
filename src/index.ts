@@ -9,6 +9,7 @@ export { getFrameworkPath } from './framework.js';
 export { getPlugins, getConfig, getLoadUnits } from './plugin.js';
 export { getFrameworkOrEggPath } from './deprecated.js';
 export * from './import.js';
+export * from './error/index.js';
 
 // support import utils from '@eggjs/utils'
 export default {

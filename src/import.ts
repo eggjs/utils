@@ -3,6 +3,7 @@ import { createRequire } from 'node:module';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import path from 'node:path';
 import fs from 'node:fs';
+import { ImportResolveError } from './error/index.js';
 
 const debug = debuglog('@eggjs/utils/import');
 
@@ -204,12 +205,37 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
 
   // find from node_modules
   for (const p of paths) {
-    const resolvedPath = path.join(p, 'node_modules', filepath);
+    let resolvedPath = path.join(p, 'node_modules', filepath);
     moduleFilePath = tryToResolveFromAbsoluteFile(resolvedPath);
     if (moduleFilePath) {
       debug('[importResolve:node_modules] %o => %o => %o',
         filepath, resolvedPath, moduleFilePath);
       return moduleFilePath;
+    }
+
+    // find from parent node_modules
+    // non-scoped package, e.g: node_modules/egg
+    let parentPath = path.dirname(p);
+    if (path.basename(parentPath) === 'node_modules') {
+      resolvedPath = path.join(parentPath, filepath);
+      moduleFilePath = tryToResolveFromAbsoluteFile(resolvedPath);
+      if (moduleFilePath) {
+        debug('[importResolve:node_modules] %o => %o => %o',
+          filepath, resolvedPath, moduleFilePath);
+        return moduleFilePath;
+      }
+    }
+
+    // scoped package, e.g: node_modules/@eggjs/tegg
+    parentPath = path.dirname(parentPath);
+    if (path.basename(parentPath) === 'node_modules') {
+      resolvedPath = path.join(parentPath, filepath);
+      moduleFilePath = tryToResolveFromAbsoluteFile(resolvedPath);
+      if (moduleFilePath) {
+        debug('[importResolve:node_modules] %o => %o => %o',
+          filepath, resolvedPath, moduleFilePath);
+        return moduleFilePath;
+      }
     }
   }
 
@@ -220,9 +246,13 @@ export function importResolve(filepath: string, options?: ImportResolveOptions) 
     });
   } else {
     if (supportImportMetaResolve) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      moduleFilePath = import.meta.resolve(filepath);
+      try {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        moduleFilePath = import.meta.resolve(filepath);
+      } catch (err) {
+        throw new ImportResolveError(filepath, paths, err as Error);
+      }
       if (moduleFilePath.startsWith('file://')) {
         // resolve will return file:// URL on Linux and MacOS expect on Windows
         moduleFilePath = fileURLToPath(moduleFilePath);
