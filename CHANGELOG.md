@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.3](https://github.com/eggjs/utils/compare/v4.2.2...v4.2.3) (2025-01-03)
+
+
+### Bug Fixes
+
+* support resolve from scoped package parent node_modules ([#36](https://github.com/eggjs/utils/issues/36)) ([7c9cc42](https://github.com/eggjs/utils/commit/7c9cc42b0398ea961eae2a2bfe12829317e1714d))
+
 ## [4.2.2](https://github.com/eggjs/utils/compare/v4.2.1...v4.2.2) (2024-12-30)
 
 
