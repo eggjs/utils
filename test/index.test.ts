@@ -1,5 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { detectType, EggType } from '../src/index.js';
+import * as all from '../src/index.js';
 import { getFilepath } from './helper.js';
 
 describe('test/index.test.ts', () => {
@@ -26,6 +27,26 @@ describe('test/index.test.ts', () => {
       const baseDir = getFilepath('no-package-json');
       assert.equal(await detectType(baseDir), EggType.unknown);
       assert.equal(await detectType(baseDir), 'unknown');
+    });
+  });
+
+  describe('export all', () => {
+    it('should keep checking', () => {
+      assert.deepEqual(Object.keys(all), [
+        'EggType',
+        'ImportResolveError',
+        'default',
+        'detectType',
+        'getConfig',
+        'getFrameworkOrEggPath',
+        'getFrameworkPath',
+        'getLoadUnits',
+        'getPlugins',
+        'importModule',
+        'importResolve',
+        'isESM',
+        'isSupportTypeScript',
+      ]);
     });
   });
 });

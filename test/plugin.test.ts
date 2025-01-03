@@ -180,7 +180,7 @@ describe('test/plugin.test.ts', () => {
       });
       await coffee.fork(bin, [ args ], { cwd: tmp })
         .debug()
-        .expect('stdout', /get app configs \["session"/)
+        .expect('stdout', /get app configs \["middleware","coreMiddleware","session"/)
         .expect('code', 0)
         .end();
     });
@@ -195,7 +195,7 @@ describe('test/plugin.test.ts', () => {
       });
       await coffee.fork(bin, [ args ], { cwd: tmp })
         .debug()
-        .expect('stdout', /get app configs \["session"/)
+        .expect('stdout', /get app configs \["middleware","coreMiddleware","session"/)
         .expect('code', 0)
         .end();
     });
@@ -210,7 +210,7 @@ describe('test/plugin.test.ts', () => {
       });
       await coffee.fork(bin, [ args ], { cwd: tmp })
         .debug()
-        .expect('stdout', /get app configs \["session"/)
+        .expect('stdout', /get app configs \["middleware","coreMiddleware","session"/)
         .expect('code', 0)
         .end();
       const config = await utils.getConfig({

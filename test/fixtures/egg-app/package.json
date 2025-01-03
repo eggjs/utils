@@ -2,7 +2,7 @@
   "name": "egg-app",
   "dependencies": {
     "egg": "beta",
-    "@eggjs/core": "beta",
+    "@eggjs/core": "6",
     "framework-demo": "^1.0.1"
   }
 }

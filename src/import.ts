@@ -16,7 +16,7 @@ export interface ImportModuleOptions extends ImportResolveOptions {
   importDefaultOnly?: boolean;
 }
 
-const isESM = typeof require === 'undefined';
+export const isESM = typeof require === 'undefined';
 const nodeMajorVersion = parseInt(process.versions.node.split('.', 1)[0], 10);
 const supportImportMetaResolve = nodeMajorVersion >= 18;
 
@@ -33,7 +33,7 @@ function getRequire() {
 }
 
 let _supportTypeScript: boolean | undefined;
-function isSupportTypeScript() {
+export function isSupportTypeScript() {
   if (_supportTypeScript === undefined) {
     const extensions = getRequire().extensions;
     _supportTypeScript = extensions['.ts'] !== undefined;
