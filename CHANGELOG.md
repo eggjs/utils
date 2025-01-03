@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.4](https://github.com/eggjs/utils/compare/v4.2.3...v4.2.4) (2025-01-03)
+
+
+### Bug Fixes
+
+* export isSupportTypeScript ([#37](https://github.com/eggjs/utils/issues/37)) ([80d8eb1](https://github.com/eggjs/utils/commit/80d8eb1c398a158438fa4705ef7a75ddf0ad05d6))
+
 ## [4.2.3](https://github.com/eggjs/utils/compare/v4.2.2...v4.2.3) (2025-01-03)
 
 
