@@ -133,30 +133,35 @@ async function findEggCore(options: LoaderOptions): Promise<{ EggCore?: object; 
     debug('[findEggCore] import "egg" from paths:%o error: %o', paths, err);
   }
 
-  const name = '@eggjs/core';
-  // egg => egg-core
-  try {
-    const { EggCore, EggLoader } = await importModule(name, { paths });
-    if (EggLoader) {
-      return { EggCore, EggLoader };
+  // egg-core 在 6.2.3 版本中更名为 @eggjs/core，为兼容老版本，支持同时查找两个包，优先使用新名字
+  const names = [ '@eggjs/core', 'egg-core' ];
+  for (const name of names) {
+    try {
+      const { EggCore, EggLoader } = await importModule(name, { paths });
+      if (EggLoader) {
+        return { EggCore, EggLoader };
+      }
+    } catch (err: any) {
+      debug('[findEggCore] import "%s" from paths:%o error: %o', name, paths, err);
     }
-  } catch (err: any) {
-    debug('[findEggCore] import "%s" from paths:%o error: %o', name, paths, err);
+
+    try {
+      const { EggCore, EggLoader } = await importModule(name);
+      if (EggLoader) {
+        return { EggCore, EggLoader };
+      }
+    } catch (err: any) {
+      debug('[findEggCore] import "%s" error: %o', name, err);
+    }
+
+    let eggCorePath = path.join(options.baseDir, `node_modules/${name}`);
+    if (!(await exists(eggCorePath))) {
+      eggCorePath = path.join(options.framework, `node_modules/${name}`);
+    }
+    if (await exists(eggCorePath)) {
+      return await importModule(eggCorePath);
+    }
   }
 
-  try {
-    const { EggCore, EggLoader } = await importModule(name);
-    if (EggLoader) {
-      return { EggCore, EggLoader };
-    }
-  } catch (err: any) {
-    debug('[findEggCore] import "%s" error: %o', name, err);
-  }
-
-  let eggCorePath = path.join(options.baseDir, `node_modules/${name}`);
-  if (!(await exists(eggCorePath))) {
-    eggCorePath = path.join(options.framework, `node_modules/${name}`);
-  }
-  assert(await exists(eggCorePath), `Can't find ${name} from ${options.baseDir} and ${options.framework}`);
-  return await importModule(eggCorePath);
+  assert(false, `Can't find ${names.join(' or ')} from ${options.baseDir} and ${options.framework}`);
 }
