@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.5](https://github.com/eggjs/utils/compare/v4.2.4...v4.2.5) (2025-01-08)
+
+
+### Bug Fixes
+
+* compatible with old version egg-core package name ([#38](https://github.com/eggjs/utils/issues/38)) ([c8b5dcc](https://github.com/eggjs/utils/commit/c8b5dcc28a2168da742f40439ef53a15723acb68))
+
 ## [4.2.4](https://github.com/eggjs/utils/compare/v4.2.3...v4.2.4) (2025-01-03)
 
 

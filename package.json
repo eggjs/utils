@@ -1,6 +1,6 @@
 {
   "name": "@eggjs/utils",
-  "version": "4.2.4",
+  "version": "4.2.5",
   "engine": {
     "node": ">=18.19.0"
   },
