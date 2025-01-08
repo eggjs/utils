@@ -123,7 +123,7 @@ async function findEggCore(options: LoaderOptions): Promise<{ EggCore?: object; 
   const baseDirRealpath = await realpath(options.baseDir);
   const frameworkRealpath = await realpath(options.framework);
   const paths = [ frameworkRealpath, baseDirRealpath ];
-  // custom framework => egg => @eggjs/core
+  // custom framework => egg => egg-core
   try {
     const { EggCore, EggLoader } = await importModule('egg', { paths });
     if (EggLoader) {
@@ -133,7 +133,7 @@ async function findEggCore(options: LoaderOptions): Promise<{ EggCore?: object; 
     debug('[findEggCore] import "egg" from paths:%o error: %o', paths, err);
   }
 
-  const name = '@eggjs/core';
+  const name = 'egg-core';
   // egg => egg-core
   try {
     const { EggCore, EggLoader } = await importModule(name, { paths });
