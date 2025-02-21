@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.3.0](https://github.com/eggjs/utils/compare/v4.2.5...v4.3.0) (2025-02-21)
+
+
+### Features
+
+* detect typescript enable on env.VITEST === 'true' ([#42](https://github.com/eggjs/utils/issues/42)) ([12af5f9](https://github.com/eggjs/utils/commit/12af5f99918fa090a558bd6e538ff461dfc91a53))
+
 ## [4.2.5](https://github.com/eggjs/utils/compare/v4.2.4...v4.2.5) (2025-01-08)
 
 
