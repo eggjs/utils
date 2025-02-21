@@ -32,12 +32,17 @@ function getRequire() {
   return _customRequire;
 }
 
+export function getExtensions() {
+  return getRequire().extensions;
+}
+
 let _supportTypeScript: boolean | undefined;
 export function isSupportTypeScript() {
   if (_supportTypeScript === undefined) {
-    const extensions = getRequire().extensions;
-    _supportTypeScript = extensions['.ts'] !== undefined;
-    debug('[isSupportTypeScript] %o, extensions: %j', _supportTypeScript, Object.keys(extensions));
+    const extensions = getExtensions();
+    _supportTypeScript = extensions['.ts'] !== undefined || process.env.VITEST === 'true';
+    debug('[isSupportTypeScript] %o, extensions: %j, process.env.VITEST: %j',
+      _supportTypeScript, Object.keys(extensions), process.env.VITEST);
   }
   return _supportTypeScript;
 }

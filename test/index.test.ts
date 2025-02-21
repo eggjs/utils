@@ -38,6 +38,7 @@ describe('test/index.test.ts', () => {
         'default',
         'detectType',
         'getConfig',
+        'getExtensions',
         'getFrameworkOrEggPath',
         'getFrameworkPath',
         'getLoadUnits',
