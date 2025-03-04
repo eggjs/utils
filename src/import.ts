@@ -40,9 +40,10 @@ let _supportTypeScript: boolean | undefined;
 export function isSupportTypeScript() {
   if (_supportTypeScript === undefined) {
     const extensions = getExtensions();
-    _supportTypeScript = extensions['.ts'] !== undefined || process.env.VITEST === 'true';
-    debug('[isSupportTypeScript] %o, extensions: %j, process.env.VITEST: %j',
-      _supportTypeScript, Object.keys(extensions), process.env.VITEST);
+    // enable ts by process.env.EGG_TS_ENABLE or process.env.VITEST
+    _supportTypeScript = extensions['.ts'] !== undefined || process.env.VITEST === 'true' || process.env.EGG_TS_ENABLE === 'true';
+    debug('[isSupportTypeScript] %o, extensions: %j, process.env.VITEST: %j, process.env.EGG_TS_ENABLE: %j',
+      _supportTypeScript, Object.keys(extensions), process.env.VITEST, process.env.EGG_TS_ENABLE);
   }
   return _supportTypeScript;
 }
