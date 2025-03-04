@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.0](https://github.com/eggjs/utils/compare/v4.3.0...v4.4.0) (2025-03-04)
+
+
+### Features
+
+* enable ts support by process.env.EGG_TS_ENABLE = true ([#43](https://github.com/eggjs/utils/issues/43)) ([4908ffc](https://github.com/eggjs/utils/commit/4908ffc834add8011ff9b1d91f75e31751975b80))
+
 ## [4.3.0](https://github.com/eggjs/utils/compare/v4.2.5...v4.3.0) (2025-02-21)
 
 
