@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.4.1](https://github.com/eggjs/utils/compare/v4.4.0...v4.4.1) (2025-03-05)
+
+
+### Bug Fixes
+
+* export getLoader ([#44](https://github.com/eggjs/utils/issues/44)) ([94f7dfe](https://github.com/eggjs/utils/commit/94f7dfe5b600e4ccf2906f7a8f6eaed77c1b1b97))
+
 ## [4.4.0](https://github.com/eggjs/utils/compare/v4.3.0...v4.4.0) (2025-03-04)
 
 
