@@ -44,6 +44,7 @@
     "npminstall": "7",
     "rimraf": "6",
     "runscript": "2",
+    "snap-shot-it": "^7.9.10",
     "tshy": "3",
     "tshy-after": "1",
     "typescript": "5"

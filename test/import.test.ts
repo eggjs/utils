@@ -1,5 +1,6 @@
 import { strict as assert } from 'node:assert';
 import coffee from 'coffee';
+
 import { importResolve, importModule, ImportResolveError } from '../src/index.js';
 import { getFilepath } from './helper.js';
 

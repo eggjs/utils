@@ -92,7 +92,7 @@ interface IEggLoaderOptions {
 
 type EggLoaderImplClass<T = IEggLoader> = new(options: IEggLoaderOptions) => T;
 
-async function getLoader(options: LoaderOptions) {
+export async function getLoader(options: LoaderOptions) {
   assert(options.framework, 'framework is required');
   assert(await exists(options.framework), `${options.framework} should exist`);
   if (!(options.baseDir && await exists(options.baseDir))) {
@@ -119,7 +119,7 @@ async function getLoader(options: LoaderOptions) {
   });
 }
 
-async function findEggCore(options: LoaderOptions): Promise<{ EggCore?: object; EggLoader: EggLoaderImplClass }> {
+export async function findEggCore(options: LoaderOptions): Promise<{ EggCore?: object; EggLoader: EggLoaderImplClass }> {
   const baseDirRealpath = await realpath(options.baseDir);
   const frameworkRealpath = await realpath(options.framework);
   const paths = [ frameworkRealpath, baseDirRealpath ];
