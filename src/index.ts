@@ -6,7 +6,7 @@ import { getFrameworkOrEggPath } from './deprecated.js';
 
 // support import { getFrameworkPath } from '@eggjs/utils'
 export { getFrameworkPath } from './framework.js';
-export { getPlugins, getConfig, getLoadUnits } from './plugin.js';
+export { getPlugins, getConfig, getLoadUnits, getLoader, findEggCore } from './plugin.js';
 export { getFrameworkOrEggPath } from './deprecated.js';
 export * from './import.js';
 export * from './error/index.js';

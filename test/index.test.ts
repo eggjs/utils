@@ -1,4 +1,6 @@
 import { strict as assert } from 'node:assert';
+import snapshot from 'snap-shot-it';
+
 import { detectType, EggType } from '../src/index.js';
 import * as all from '../src/index.js';
 import { getFilepath } from './helper.js';
@@ -32,22 +34,7 @@ describe('test/index.test.ts', () => {
 
   describe('export all', () => {
     it('should keep checking', () => {
-      assert.deepEqual(Object.keys(all), [
-        'EggType',
-        'ImportResolveError',
-        'default',
-        'detectType',
-        'getConfig',
-        'getExtensions',
-        'getFrameworkOrEggPath',
-        'getFrameworkPath',
-        'getLoadUnits',
-        'getPlugins',
-        'importModule',
-        'importResolve',
-        'isESM',
-        'isSupportTypeScript',
-      ]);
+      snapshot(Object.keys(all));
     });
   });
 });
